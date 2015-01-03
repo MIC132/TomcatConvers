@@ -1,16 +1,16 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: MIC
-  Date: 2014-12-22
-  Time: 10:16
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page contentType="text/html; charset=UTF-8" %>
+<% if (session.getAttribute("nickname") == null) {
+  response.sendRedirect("login.jsp");
+  return;
+}
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html>
-  <head>
-    <title></title>
-  </head>
-  <body>
-   Hello World!
-  </body>
+<head>
+  <title>JSP Chat</title>
+</head>
+<frameset rows="1*,4*">
+  <frame name="post" src="post.jsp" scrolling="no" title="Post message">
+  <frame name="chat" src="ChatServlet" scrolling="yes" title="Chat">
+</frameset>
 </html>

@@ -19,5 +19,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Tomcat Libs" level="project" />
+    <orderEntry type="library" name="tomcat-juli" level="project" />
   </component>
 </module>
