@@ -13,7 +13,7 @@ public class ChatAnnotation {
 
     private static final Log log = LogFactory.getLog(ChatAnnotation.class);
 
-    private static final String GUEST_PREFIX = "Guest";
+    private static final String GUEST_PREFIX = "Player";
     private static final AtomicInteger connectionIds = new AtomicInteger(0);
     private static final Set<ChatAnnotation> connections =
             new CopyOnWriteArraySet<ChatAnnotation>();
@@ -30,7 +30,7 @@ public class ChatAnnotation {
     public void start(Session session) {
         this.session = session;
         connections.add(this);
-        String message = String.format("* %s %s", nickname, "has joined.");
+        String message = String.format("* %s %s", nickname, "has joined the game.");
         broadcast(message);
     }
 
@@ -39,7 +39,7 @@ public class ChatAnnotation {
     public void end() {
         connections.remove(this);
         String message = String.format("* %s %s",
-                nickname, "has disconnected.");
+                nickname, "has left the game.");
         broadcast(message);
     }
 
