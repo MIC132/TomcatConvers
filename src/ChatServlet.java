@@ -24,7 +24,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
 
     @Override
     public void init() throws ServletException {
-        messageSender = new MessageSender();
+        messageSender = new MessageSender(connections);
         Thread messageSenderThread = new Thread(messageSender, "MessageSender[" + getServletContext().getContextPath() + ']');
         messageSenderThread.setDaemon(true);
         messageSenderThread.start();
@@ -85,7 +85,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
         PrintWriter writer = response.getWriter();
         writer.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
         writer.println("<html><head><title>Chat</title></head><body bgcolor=\"#FFFFFF\">");
-        writer.println("<div>Welcome to the chat. <a href='chat'>Click here to reload this window</a></div>");
+        writer.println("<div>Welcome to the chat.</div>");
         writer.flush();
 
         synchronized(connections) {
@@ -115,6 +115,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
         event.close();
     }
 
+    //For logging purposes only
     protected void read(CometEvent event, HttpServletRequest request, HttpServletResponse response) throws IOException {
         InputStream is = request.getInputStream();
         byte[] buf = new byte[512];
@@ -140,89 +141,5 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
         writer.println("<html><head><title>JSP Chat</title></head><body bgcolor=\"#FFFFFF\">");
         writer.println("This chat only supports Comet processing, change connector to one that supports it. ");
         writer.println("</body></html>");
-    }
-
-    public class MessageSender implements Runnable {
-
-        protected boolean running = true;
-        protected final ArrayList<String> messages = new ArrayList<String>();
-
-        public void stop() {
-            running = false;
-            synchronized (messages) {
-                messages.notify();
-            }
-        }
-
-        public void send(String user, String message) {
-            synchronized (messages) {
-                messages.add('[' + user + "]: " + message);
-                messages.notify();
-            }
-        }
-
-        /**
-         * The background thread that listens for incoming TCP/IP connections and
-         * hands them off to an appropriate processor.
-         */
-        @Override
-        public void run() {
-            while (running) {
-                String[] pendingMessages;
-                synchronized (messages) {
-                    try {
-                        if (messages.isEmpty()) {
-                            messages.wait();
-                        }
-                    } catch (InterruptedException e) {
-                        // Ignore
-                    }
-                    pendingMessages = messages.toArray(new String[messages.size()]);
-                    messages.clear();
-                }
-
-                synchronized (connections) {
-                    for (HttpServletResponse connection : connections) {
-                        try {
-                            PrintWriter writer = connection.getWriter();
-                            for (String pendingMessage : pendingMessages) {
-                                writer.println("<div>" + filter(pendingMessage) + "</div>");
-                            }
-                            writer.flush();
-                        } catch (IOException e) {
-                            log("IOException sending message", e);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    //Filter for replacint/removing html symbols TODO:replace with CoR
-    protected static String filter(String message) {
-        if (message == null) return null;
-
-        char[] content = new char[message.length()];
-        message.getChars(0, message.length(), content, 0);
-        StringBuilder result = new StringBuilder(content.length + 50);
-        for (char aContent : content) {
-            switch (aContent) {
-                case '<':
-                    result.append("&lt;");
-                    break;
-                case '>':
-                    result.append("&gt;");
-                    break;
-                case '&':
-                    result.append("&amp;");
-                    break;
-                case '"':
-                    result.append("&quot;");
-                    break;
-                default:
-                    result.append(aContent);
-            }
-        }
-        return result.toString();
     }
 }

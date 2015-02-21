@@ -27,7 +27,7 @@
   // strip "post.jsp" from the address
   chatUrl = chatUrl.substring(0, chatUrl.lastIndexOf('/') + 1);
 %>
-<a target="_blank" href="<%=chatUrl %>">Click to open a new chat window</a>
+<a target="_blank" href="<%=chatUrl %>">Click to open a new chat window</a><br/>
 <em>Note</em>: To avoid hitting the limit on the count of simultaneous
 connections to the same host, imposed by the
 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.1.4">HTTP specification</a>,
