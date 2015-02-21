@@ -32,6 +32,7 @@
 connections to the same host, imposed by the
 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.1.4">HTTP specification</a>,
 the second chat window should be opened using a different URL, e.g. with
-an IP address instead of the host name.
+an IP address instead of the host name.<br/>
+<a target="_blank" href="download.jsp">Download chat history</a>
 </body>
 </html>

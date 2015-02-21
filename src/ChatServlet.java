@@ -20,11 +20,12 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
     private static final String CHARSET = "UTF-8";
 
     protected final ArrayList<HttpServletResponse> connections = new ArrayList<HttpServletResponse>();
-    protected final MessageHistory history = new MessageHistory();
+    protected MessageHistory history;
     protected transient MessageQueue messageQueue = null;
 
     @Override
     public void init() throws ServletException {
+        history = new MessageHistory(getServletContext());
         messageQueue = new MessageQueue(connections,history);
     }
 
@@ -51,12 +52,23 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
                     event.close();
                     return;
                 }
-                String nickname = (String) request.getSession(true).getAttribute("nickname");
-                String message = request.getParameter("message");
-                messageQueue.add(nickname, message);
-                response.sendRedirect("post.jsp");
-                event.close();
-                return;
+                if("post".equals(action)){
+                    String nickname = (String) request.getSession(true).getAttribute("nickname");
+                    String message = request.getParameter("message");
+                    messageQueue.add(nickname, message);
+                    response.sendRedirect("post.jsp");
+                    event.close();
+                    return;
+                }
+                if("history".equals(action)){
+                    response.setContentType("text/html; charset=" + CHARSET);
+                    String format = request.getParameter("format");
+                    history.export(format);
+                    PrintWriter writer = response.getWriter();
+                    writer.println("History ready.<a href=\"history.txt\" download>Click here to download.</a>");
+                    writer.flush();
+                    return;
+                }
             }
             if (request.getSession(true).getAttribute("nickname") == null) {
                 // Redirect to "login"
