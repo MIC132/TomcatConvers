@@ -20,11 +20,12 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
     private static final String CHARSET = "UTF-8";
 
     protected final ArrayList<HttpServletResponse> connections = new ArrayList<HttpServletResponse>();
+    protected final MessageHistory history = new MessageHistory();
     protected transient MessageQueue messageQueue = null;
 
     @Override
     public void init() throws ServletException {
-        messageQueue = new MessageQueue(connections);
+        messageQueue = new MessageQueue(connections,history);
     }
 
     @Override

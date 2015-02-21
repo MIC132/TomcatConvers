@@ -4,10 +4,12 @@ import java.util.ArrayList;
 public class MessageQueue {
     public final ArrayList<Message> messages = new ArrayList<Message>();
     public final ArrayList<HttpServletResponse> connections;
-    protected MessageSender sender = null;
+    protected MessageSender sender;
+    protected MessageHistory history;
 
-    public MessageQueue(ArrayList<HttpServletResponse> connections) {
+    public MessageQueue(ArrayList<HttpServletResponse> connections, MessageHistory history) {
         this.connections = connections;
+        this.history = history;
         sender = new MessageSender(this);
         Thread messageSenderThread = new Thread(sender);
         messageSenderThread.setDaemon(true);
@@ -23,7 +25,9 @@ public class MessageQueue {
 
     public void add(String user, String message) {
         synchronized (messages) {
-            messages.add(new Message(user,message));
+            Message m = new Message(user,message);
+            messages.add(m);
+            history.add(m);
             messages.notifyAll();
         }
     }
