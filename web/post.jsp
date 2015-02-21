@@ -2,7 +2,7 @@
 <%@page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-  <title>JSP Chat</title>
+  <title>Chat</title>
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -22,12 +22,10 @@
     serverName = "localhost";
   }
 
-  String chatUrl = request.getScheme() + "://" + serverName + ":"
-          + request.getServerPort() + request.getContextPath()
-          + request.getServletPath();
+  String chatUrl = request.getScheme() + "://" + serverName + ":" + request.getServerPort() + request.getContextPath() + request.getServletPath();
 
   // strip "post.jsp" from the address
-  chatUrl = chatUrl.substring(0, chatUrl.lastIndexOf("/") + 1);
+  chatUrl = chatUrl.substring(0, chatUrl.lastIndexOf('/') + 1);
 %>
 <a target="_blank" href="<%=chatUrl %>">Click to open a new chat window</a>
 <em>Note</em>: To avoid hitting the limit on the count of simultaneous

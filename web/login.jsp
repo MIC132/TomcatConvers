@@ -2,7 +2,7 @@
 <%@page contentType="text/html; charset=UTF-8" %>
 <html>
 <head>
-  <title>JSP Chat</title>
+  <title>Chat</title>
 </head>
 
 <body bgcolor="#FFFFFF">
