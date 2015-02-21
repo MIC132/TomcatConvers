@@ -20,21 +20,18 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
     private static final String CHARSET = "UTF-8";
 
     protected final ArrayList<HttpServletResponse> connections = new ArrayList<HttpServletResponse>();
-    protected transient MessageSender messageSender = null;
+    protected transient MessageQueue messageQueue = null;
 
     @Override
     public void init() throws ServletException {
-        messageSender = new MessageSender(connections);
-        Thread messageSenderThread = new Thread(messageSender, "MessageSender[" + getServletContext().getContextPath() + ']');
-        messageSenderThread.setDaemon(true);
-        messageSenderThread.start();
+        messageQueue = new MessageQueue(connections);
     }
 
     @Override
     public void destroy() {
         connections.clear();
-        messageSender.stop();
-        messageSender = null;
+        messageQueue.stop();
+        messageQueue = null;
     }
 
     //Processes Comet event
@@ -55,7 +52,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
                 }
                 String nickname = (String) request.getSession(true).getAttribute("nickname");
                 String message = request.getParameter("message");
-                messageSender.send(nickname, message);
+                messageQueue.add(nickname, message);
                 response.sendRedirect("post.jsp");
                 event.close();
                 return;
@@ -92,7 +89,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
             connections.add(response);
         }
 
-        messageSender.send("Tomcat", request.getSession(true).getAttribute("nickname") + " joined the chat.");
+        messageQueue.add("Tomcat", request.getSession(true).getAttribute("nickname") + " joined the chat.");
     }
 
     protected void end(CometEvent event, HttpServletRequest request, HttpServletResponse response) throws IOException {

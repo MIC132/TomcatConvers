@@ -4,50 +4,35 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class MessageSender implements Runnable {
-    protected boolean running = true;
-    protected final ArrayList<String> messages = new ArrayList<String>();
-    protected final ArrayList<HttpServletResponse> connections;
+    final MessageQueue queue;
+    boolean running = true;
 
-    public MessageSender(ArrayList<HttpServletResponse> connections) {
-        this.connections = connections;
-    }
-
-    public void stop() {
-        running = false;
-        synchronized (messages) {
-            messages.notify();
-        }
-    }
-
-    public void send(String user, String message) {
-        synchronized (messages) {
-            messages.add('[' + user + "]: " + message);
-            messages.notify();
-        }
+    public MessageSender(MessageQueue queue) {
+        this.queue = queue;
     }
 
     @Override
     public void run() {
         while (running) {
-            String[] pendingMessages;
-            synchronized (messages) {
+            ArrayList<Message> pendingMessages;
+            synchronized (queue.messages) {
                 try {
-                    if (messages.isEmpty()) {
-                        messages.wait();
+                    if (queue.messages.isEmpty()) {
+                        queue.messages.wait();
                     }
                 } catch (InterruptedException e) {
                     // Ignore
                 }
-                pendingMessages = messages.toArray(new String[messages.size()]);
-                messages.clear();
+                pendingMessages = new ArrayList<Message>(queue.messages);
+                queue.messages.clear();
             }
 
-            synchronized (connections) {
-                for (HttpServletResponse connection : connections) {
+            synchronized (queue.connections) {
+                for (HttpServletResponse connection : queue.connections) {
                     try {
                         PrintWriter writer = connection.getWriter();
-                        for (String pendingMessage : pendingMessages) {
-                            writer.println("<div>" + filter(pendingMessage) + "</div>");
+                        for (Message pendingMessage : pendingMessages) {
+                            writer.println("<div>" + filter(pendingMessage.toString()) + "</div>");
                         }
                         writer.flush();
                     } catch (IOException e) {
