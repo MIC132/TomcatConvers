@@ -5,6 +5,9 @@ public abstract class Exporter {
         if(format.equals("txt")){
             return new TxtExporter();
         }
+        if(format.equals("json")){
+            return new JsonExporter();
+        }
         return null;
     }
     abstract void export(ArrayList<Message> messages, String path);

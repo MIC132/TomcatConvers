@@ -11,6 +11,7 @@
     <input type="hidden" name="action" value="history">
     Format: <select name="format">
     <option value="txt">.txt</option>
+    <option value="json">.json</option>
     </select>
     <input type="submit">
 </form>

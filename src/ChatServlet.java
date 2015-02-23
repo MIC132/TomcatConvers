@@ -65,7 +65,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
                     String format = request.getParameter("format");
                     history.export(format);
                     PrintWriter writer = response.getWriter();
-                    writer.println("History ready.<a href=\"history.txt\" download>Click here to download.</a>");
+                    writer.println("History ready.<a href=\"history."+format+"\" download>Click here to download.</a>");
                     writer.flush();
                     return;
                 }
