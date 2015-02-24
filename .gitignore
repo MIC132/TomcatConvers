@@ -63,3 +63,6 @@ crashlytics-build.properties
 hs_err_pid*
 
 
+/nbproject/private/
+/build/
+/dist/

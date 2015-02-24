@@ -1,3 +1,5 @@
+package chat;
+
 import org.apache.catalina.comet.CometEvent;
 import org.apache.catalina.comet.CometProcessor;
 
@@ -10,23 +12,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import message.Message;
+import message.MessageBase;
 
-
-@WebServlet("/ChatServlet")
+@WebServlet("/chat.ChatServlet")
 public class ChatServlet extends HttpServlet implements CometProcessor {
 
     private static final long serialVersionUID = 1L;
 
     private static final String CHARSET = "UTF-8";
 
-    protected final ArrayList<HttpServletResponse> connections = new ArrayList<HttpServletResponse>();
+    protected final ArrayList<HttpServletResponse> connections = new ArrayList<>();
     protected MessageHistory history;
     protected transient MessageQueue messageQueue = null;
 
     @Override
     public void init() throws ServletException {
         history = new MessageHistory(getServletContext());
-        messageQueue = new MessageQueue(connections,history);
+        messageQueue = new MessageQueue(connections, history);
     }
 
     @Override
@@ -52,21 +55,22 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
                     event.close();
                     return;
                 }
-                if("post".equals(action)){
+                if ("post".equals(action)) {
                     String nickname = (String) request.getSession(true).getAttribute("nickname");
                     String message = request.getParameter("message");
-                    messageQueue.add(nickname, message);
+                    MessageBase msg = new Message(nickname, message);
+                    messageQueue.add(msg);
                     response.sendRedirect("post.jsp");
                     event.close();
                     return;
                 }
-                if("history".equals(action)){
+                if ("history".equals(action)) {
                     response.setContentType("text/html; charset=" + CHARSET);
                     String format = request.getParameter("format");
                     history.export(format);
-                    PrintWriter writer = response.getWriter();
-                    writer.println("History ready.<a href=\"history."+format+"\" download>Click here to download.</a>");
-                    writer.flush();
+                    try (PrintWriter writer = response.getWriter()) {
+                        writer.println("History ready.<a href=\"history." + format + "\" download>Click here to download.</a>");
+                    }
                     return;
                 }
             }
@@ -98,16 +102,16 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
         writer.println("<div>Welcome to the chat.</div>");
         writer.flush();
 
-        synchronized(connections) {
+        synchronized (connections) {
             connections.add(response);
         }
 
-        messageQueue.add("Tomcat", request.getSession(true).getAttribute("nickname") + " joined the chat.");
+        messageQueue.add(new Message("Tomcat", request.getSession(true).getAttribute("nickname") + " joined the chat."));
     }
 
     protected void end(CometEvent event, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log("End for session: " + request.getSession(true).getId());
-        synchronized(connections) {
+        synchronized (connections) {
             connections.remove(response);
         }
 
@@ -119,7 +123,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
 
     protected void error(CometEvent event, HttpServletRequest request, HttpServletResponse response) throws IOException {
         log("Error for session: " + request.getSession(true).getId());
-        synchronized(connections) {
+        synchronized (connections) {
             connections.remove(response);
         }
         event.close();

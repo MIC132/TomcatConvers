@@ -1,12 +1,16 @@
+package exporter;
+
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import message.MessageBase;
 
 public class JsonExporter extends Exporter {
+
     @Override
-    public void export(ArrayList<Message> messages, String path){
+    public void export(ArrayList<MessageBase> messages, String path) {
         PrintWriter writer;
         Gson gson = new Gson();
         try {
@@ -15,7 +19,6 @@ public class JsonExporter extends Exporter {
             writer.print(json);
             writer.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

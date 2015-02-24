@@ -1,8 +1,11 @@
+package chat;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import message.MessageBase;
 
 public class MessageQueue {
-    public final ArrayList<Message> messages = new ArrayList<Message>();
+    public final ArrayList<MessageBase> messages = new ArrayList<>();
     public final ArrayList<HttpServletResponse> connections;
     protected MessageSender sender;
     protected MessageHistory history;
@@ -23,11 +26,10 @@ public class MessageQueue {
         }
     }
 
-    public void add(String user, String message) {
+    public void add(MessageBase message) {
         synchronized (messages) {
-            Message m = new Message(user,message);
-            messages.add(m);
-            history.add(m);
+            messages.add(message);
+            history.add(message);
             messages.notifyAll();
         }
     }
