@@ -14,6 +14,9 @@ public class FIlterShorts extends Filter {
     }
 
     Message handle(Message input){
+        if (input == null) return null;
+        if(input.message == null) return input;
+        if(input.message.isEmpty()) return input;
         input.message = work(input.message);
         if(next != null) return next.handle(input);
         return input;
