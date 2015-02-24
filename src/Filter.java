@@ -6,6 +6,10 @@ public class Filter {
     void attach(Filter next_module){
         next = next_module;
     }
+    Filter(Filter next_module){
+        next = next_module;
+    }
+    Filter() {next = null; };
     Message handle(Message input){
         return input;
     }

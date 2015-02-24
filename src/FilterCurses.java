@@ -7,6 +7,8 @@ public class FilterCurses extends Filter {
 
         message.replaceAll("kurwa","*****" );
         message.replaceAll("fuck","****" );
+        message.replaceAll("pierdol","*******" );
+        message.replaceAll("chuj","****" );
 
         return message;
     }
