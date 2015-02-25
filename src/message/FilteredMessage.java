@@ -1,9 +1,6 @@
 package message;
 
-import filters.ChainFilter;
-import filters.FilterCurses;
-import filters.FilterHTML;
-import filters.FilterShorts;
+import filters.*;
 
 public class FilteredMessage extends MessageDecorator {
 
@@ -14,7 +11,7 @@ public class FilteredMessage extends MessageDecorator {
         filter = new ChainFilter();
         filter.add(new FilterHTML());
         filter.add(new FilterCurses());
-        filter.add(new FilterShorts());
+        filter.add(new FilterAbbrv());
     }
 
     @Override
