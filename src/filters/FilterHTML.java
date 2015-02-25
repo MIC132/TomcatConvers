@@ -1,3 +1,5 @@
+package filters;
+
 /**
  * Created by vulpes on 21.02.15.
  */
@@ -29,11 +31,9 @@ public class FilterHTML extends Filter {
         return result.toString();
     }
 
-    Message handle(Message input){
-        if (input == null) return null;
-        if(input.message == null) return input;
-        if(input.message.isEmpty()) return input;
-        input.message = work(input.message);
-        return next.handle(input);
+    @Override
+    public String handle(String input){
+        String output = work(input);
+        return next.handle(output);
     }
 }

@@ -1,3 +1,5 @@
+package filters;
+
 /**
  * Created by vulpes on 21.02.15.
  */
@@ -11,7 +13,7 @@ public abstract class Filter {
         next = next_module;
     }      // twórz z od razu doczepionym następnym
     Filter() {next = null; };                               // twórz bez doczepionego
-    public Message handle(Message input){                          // przetwórz wiadomość
+    public String handle(String input){                          // przetwórz wiadomość
         return next.handle(input);
     }
 }
