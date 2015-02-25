@@ -12,7 +12,6 @@ public abstract class Filter {
     }      // twórz z od razu doczepionym następnym
     Filter() {next = null; };                               // twórz bez doczepionego
     Message handle(Message input){                          // przetwórz wiadomość
-        if(next != null) return next.handle(input);
-        return input;
+        return next.handle(input);
     }
 }
