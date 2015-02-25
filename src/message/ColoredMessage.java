@@ -8,7 +8,13 @@ public class ColoredMessage extends MessageDecorator {
         super(message);
         // We can't directly use message.user, because user belongs to Message and not to MessageBase
         String user = message.toString().substring(message.toString().indexOf("[") + 1, message.toString().indexOf("]"));
-        this.color = strToColorHex(user);
+        switch (user) {
+            case "Tomcat":
+                this.color = "black";
+                break;
+            default:
+                this.color = strToColorHex(user);
+        }
     }
 
     @Override

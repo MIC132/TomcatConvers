@@ -12,6 +12,6 @@ public class Message implements MessageBase {
 
     @Override
     public String toString() {
-        return '[' + user + "]" + message;
+        return '[' + user + "] " + message;
     }
 }
