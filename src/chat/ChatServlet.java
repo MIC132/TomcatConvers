@@ -1,5 +1,7 @@
 package chat;
 
+import message.Message;
+import message.MessageBase;
 import org.apache.catalina.comet.CometEvent;
 import org.apache.catalina.comet.CometProcessor;
 
@@ -12,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import message.Message;
-import message.MessageBase;
 
 @WebServlet("/chat.ChatServlet")
 public class ChatServlet extends HttpServlet implements CometProcessor {
@@ -44,6 +44,7 @@ public class ChatServlet extends HttpServlet implements CometProcessor {
     public void event(CometEvent event) throws IOException, ServletException {
         HttpServletRequest request = event.getHttpServletRequest();
         HttpServletResponse response = event.getHttpServletResponse();
+        request.setCharacterEncoding("UTF-8");
 
         if (event.getEventType() == CometEvent.EventType.BEGIN) {
             String action = request.getParameter("action");

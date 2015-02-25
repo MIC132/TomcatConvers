@@ -1,11 +1,11 @@
 package exporter;
 
 import com.google.gson.Gson;
+import message.MessageBase;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import message.MessageBase;
 
 public class JsonExporter extends Exporter {
 
