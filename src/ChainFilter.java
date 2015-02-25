@@ -2,16 +2,16 @@
  * Created by vulpes on 25.02.15.
  */
 public class ChainFilter {
-    Filter start = null;
-    int count;
+    Filter start = null;        // początek naszego łańcucha
+    int count;                  // gdzie jest klasa-końcówka?
 
-    public void add(Filter input, int place){
+    public void add(Filter input){   //dodawanie filtra
         input.attach(start);
         start = input;
         count++;
     }
 
-    public void remove(int place){
+    public void remove(int place){      //usuwanie filtra - nie można usunąć końcówki
         if(place < 0 || place >= count) return;
         else if(place == 0 && start.next != null) start = start.next;
         else if(place < count){
