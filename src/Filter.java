@@ -11,7 +11,7 @@ public abstract class Filter {
         next = next_module;
     }      // twórz z od razu doczepionym następnym
     Filter() {next = null; };                               // twórz bez doczepionego
-    Message handle(Message input){                          // przetwórz wiadomość
+    public Message handle(Message input){                          // przetwórz wiadomość
         return next.handle(input);
     }
 }

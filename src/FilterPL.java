@@ -28,7 +28,7 @@ public class FilterPL extends Filter {
         return message;
     }
 
-    Message handle(Message input){
+    public Message handle(Message input){
         if (input == null) return null;
         if(input.message == null) return input;
         if(input.message.isEmpty()) return input;
