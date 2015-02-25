@@ -17,7 +17,7 @@ public class ColoredMessage extends MessageDecorator {
     }
 
     private static String strToColorHex(String str) {
-        int hex = str.hashCode() << 8 >> 8;
+        int hex = str.hashCode() << 8 >>> 8;
         return String.format("#%06x", hex);
     }
 }
