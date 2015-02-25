@@ -1,7 +1,7 @@
 /**
  * Created by vulpes on 21.02.15.
  */
-public class Filter {
+public abstract class Filter {
     Filter next = null;                                     // następny po nim
     void attach(Filter next_module){
         next = next_module;
